@@ -28,6 +28,7 @@ services:
     image: docker.elastic.co/kibana/kibana:7.12.1
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.encryptedSavedObjects.encryptionKey=0MI7tu56kXMvbG10MI7tu56kXMvbG10MI7tu56kXMvbG1
     ports:
       - 5601:5601
     depends_on:

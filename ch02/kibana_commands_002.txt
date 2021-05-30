@@ -574,7 +574,7 @@ PUT _index_template/order
   "index_patterns": ["order*"],
   "template": {
     "settings": {
-      "number_of_shards": 1
+      "number_of_shards": 1,
     },
     "mappings": {
       "properties": {
