@@ -9,7 +9,7 @@ scalaVersion := "2.13.5"
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
 libraryDependencies ++= {
-  val elastic4sV = "7.13.2"
+  val elastic4sV = "8.0.0"
   val scalaTestV = "3.2.7"
   val Log4jVersion = "2.14.1"
   Seq(

@@ -14,7 +14,6 @@ public class MappingOperations {
 
     public static void main(String[] args) {
         String index = "mytest";
-        String type = "mytype";
         RestHighLevelClient client = RestHighLevelClientHelper.createHighLevelClient();
         IndicesOperations io = new IndicesOperations(client);
         try {
@@ -23,8 +22,9 @@ public class MappingOperations {
             io.createIndex(index);
             XContentBuilder builder = null;
             try {
-                builder = jsonBuilder().startObject().field("type1").startObject().field("properties").startObject()
-                        .field("nested1").startObject().field("type").value("nested").endObject().endObject()
+                builder = jsonBuilder().startObject()
+                        .field("properties").startObject()
+                        .field("nested1").startObject().field("type").value("nested").endObject()
                         .endObject().endObject();
                 AcknowledgedResponse response = client.indices()
                         .putMapping(new PutMappingRequest(index).source(builder), RequestOptions.DEFAULT);

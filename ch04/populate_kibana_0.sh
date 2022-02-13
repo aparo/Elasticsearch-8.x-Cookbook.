@@ -1,6 +1,6 @@
-curl -XDELETE "http://0.0.0.0:9200/mybooks"
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XDELETE "http://0.0.0.0:9200/mybooks"
 
-curl -XPUT "http://0.0.0.0:9200/mybooks" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT "http://0.0.0.0:9200/mybooks" -H 'Content-Type: application/json' -d'
 {
   "mappings": {
       "properties": {
@@ -48,7 +48,7 @@ curl -XPUT "http://0.0.0.0:9200/mybooks" -H 'Content-Type: application/json' -d'
     }
 }'
 
-curl -XPOST "http://0.0.0.0:9200/_bulk?refresh" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST "http://0.0.0.0:9200/_bulk?refresh" -H 'Content-Type: application/json' -d'
 {"index":{"_index":"mybooks", "_id":"1"}}
 {"uuid":"11111","position":1,"title":"Joe Tester","description":"Joe Testere nice guy","date":"2015-10-22","price":4.3,"quantity":50}
 {"index":{"_index":"mybooks", "_id":"2"}}
@@ -57,9 +57,9 @@ curl -XPOST "http://0.0.0.0:9200/_bulk?refresh" -H 'Content-Type: application/js
 {"uuid":"33333","position":3,"title":"Bill Klingon","description":"Bill is not\n                nice guy","date":"2017-09-21","price":6,"quantity":33}
 '
 
-curl -XDELETE "http://0.0.0.0:9200/mybooks-join"
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XDELETE "http://0.0.0.0:9200/mybooks-join"
 
-curl -XPUT "http://0.0.0.0:9200/mybooks-join" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT "http://0.0.0.0:9200/mybooks-join" -H 'Content-Type: application/json' -d'
 {
   "mappings": {
       "properties": {
@@ -140,7 +140,7 @@ curl -XPUT "http://0.0.0.0:9200/mybooks-join" -H 'Content-Type: application/json
 }'
 
 
-curl -XPOST "http://0.0.0.0:9200/_bulk?refresh" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST "http://0.0.0.0:9200/_bulk?refresh" -H 'Content-Type: application/json' -d'
 {"index":{"_index":"mybooks-join", "_id":"1"}}
 {"uuid":"11111","position":1,"title":"Joe Tester","description":"Joe Testere nice guy","date":"2015-10-22","price":4.3,"quantity":50,"join": {"name": "book"}, "versions":[{"color":"yellow", "size":5},{"color":"blue", "size":15}]}
 {"index":{"_index":"mybooks-join", "_id":"a1", "routing":"1"}}
@@ -157,10 +157,10 @@ curl -XPOST "http://0.0.0.0:9200/_bulk?refresh" -H 'Content-Type: application/js
 {"name":"Martin","surname":"Twisted","rating":3.2,"join": {"name": "author", "parent":"3"}}
 '
 
-curl -XPOST "http://0.0.0.0:9200/mybooks-join/_refresh"
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST "http://0.0.0.0:9200/mybooks-join/_refresh"
 
-curl -XDELETE 'http://0.0.0.0:9200/mygeo-index'
-curl -XPUT "http://0.0.0.0:9200/mygeo-index" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XDELETE 'http://0.0.0.0:9200/mygeo-index'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT "http://0.0.0.0:9200/mygeo-index" -H 'Content-Type: application/json' -d'
 {
   "mappings": {
     "properties": {
@@ -175,6 +175,6 @@ curl -XPUT "http://0.0.0.0:9200/mygeo-index" -H 'Content-Type: application/json'
   }
 }'
 
-curl -XPUT 'http://0.0.0.0:9200/mygeo-index/_doc/1' -H 'Content-Type: application/json' -d '{"pin": {"location": {"lat": 40.12, "lon": -71.34}}}'
-curl -XPUT 'http://0.0.0.0:9200/mygeo-index/_doc/2' -H 'Content-Type: application/json' -d '{"pin": {"location": {"lat": 40.12, "lon": 71.34}}}'
-curl -XPOST 'http://0.0.0.0:9200/mygeo-index/_refresh'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT 'http://0.0.0.0:9200/mygeo-index/_doc/1' -H 'Content-Type: application/json' -d '{"pin": {"location": {"lat": 40.12, "lon": -71.34}}}'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT 'http://0.0.0.0:9200/mygeo-index/_doc/2' -H 'Content-Type: application/json' -d '{"pin": {"location": {"lat": 40.12, "lon": 71.34}}}'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST 'http://0.0.0.0:9200/mygeo-index/_refresh'

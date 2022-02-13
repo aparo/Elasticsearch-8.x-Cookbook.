@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.JavaClient
 import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties}
 
 object ClientSample extends App {
-  val client = ElasticClient(JavaClient(ElasticProperties("http://127.0.0.1:9200")))
+  val client = ElasticClient(JavaClient(ElasticProperties("https://127.0.0.1:9200")))
 
   // await is a helper method to make this operation synchronous instead of async
   // You would normally avoid doing this in a real program as it will block your thread

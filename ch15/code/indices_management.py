@@ -20,4 +20,3 @@ es.cluster.health(wait_for_status="yellow")
 es.indices.forcemerge(index_name)
 
 es.indices.delete(index_name)
-

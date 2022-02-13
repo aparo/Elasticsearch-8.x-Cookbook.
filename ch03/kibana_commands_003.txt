@@ -1,6 +1,6 @@
 DELETE /myindex
 
-DELETE /_all
+DELETE /test-*
 
 PUT /myindex
 {
@@ -41,7 +41,7 @@ PUT /myindex
 
 POST /myindex/_close
 
-POST /myindex/
+POST /myindex/_open
 
 DELETE /myindex
 
@@ -162,7 +162,7 @@ HEAD /myindex/
 GET /myindex/_settings?pretty=true
 
 PUT /myindex/_settings
-{"index":{ "number_of_replicas": "2"}}
+{"index":{ "number_of_replicas": 2}}
 
 PUT /myindex/_settings
 {"index":{"refresh_interval": "-1"}}

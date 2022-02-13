@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class App {
 
-    private static String wsUrl = "http://127.0.0.1:9200";
+    private static String wsUrl = "https://127.0.0.1:9200";
 
 
     public static void main(String[] args) {

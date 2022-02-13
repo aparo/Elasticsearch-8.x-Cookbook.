@@ -17,7 +17,7 @@ GET /mybooks/_search?q=title:joe&stored_fields=title
 
 GET /mybooks/_search?sort=title.keyword:desc
 
-POST /mybook/_search
+POST /mybooks/_search
 {
   "query": {
     "match": {
@@ -214,7 +214,7 @@ GET /mybooks/_count?q=uuid:11111
 GET /mybooks/_count?q=uuid:11111
 
 # explain
-GET /mybooks/_doc/1/_explain?pretty
+GET /mybooks/_explain/1?pretty
 {
   "query": {
     "term": {
@@ -409,5 +409,3 @@ POST /_render/template
     "value": "22222"
   }
 }
-
-

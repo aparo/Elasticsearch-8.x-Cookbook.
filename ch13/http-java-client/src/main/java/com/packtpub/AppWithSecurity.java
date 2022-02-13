@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class AppWithSecurity {
 
-    private static String wsUrl = "http://127.0.0.1:9200";
+    private static String wsUrl = "https://127.0.0.1:9200";
 
     public static void main(String[] args) {
         CloseableHttpClient client = HttpClients.custom().setRetryHandler(new MyRequestRetryHandler()).build();

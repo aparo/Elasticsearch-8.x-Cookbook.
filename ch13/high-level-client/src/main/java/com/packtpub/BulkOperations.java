@@ -26,7 +26,6 @@ public class BulkOperations {
                         .create(new CreateIndexRequest(index).mapping(XContentFactory.jsonBuilder().startObject()
                                 .startObject("properties").startObject("position").field("type", "integer")
                                 .field("store", "true").endObject().endObject().endObject()), RequestOptions.DEFAULT);
-                ;
             } catch (IOException e) {
                 System.out.println("Unable to create mapping");
             }

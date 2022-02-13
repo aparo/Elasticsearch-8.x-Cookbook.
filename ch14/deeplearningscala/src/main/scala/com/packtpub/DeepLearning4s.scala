@@ -22,7 +22,7 @@ object DeepLearning4s extends App with LazyLogging {
 
 
   lazy val client: ElasticClient = {
-    ElasticClient(JavaClient(ElasticProperties("http://127.0.0.1:9200")))
+    ElasticClient(JavaClient(ElasticProperties("https://127.0.0.1:9200")))
   }
   import com.sksamuel.elastic4s.ElasticDsl._
 

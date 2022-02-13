@@ -1,6 +1,6 @@
-curl -XDELETE "http://localhost:9200/index-agg"
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XDELETE "http://localhost:9200/index-agg"
 
-curl -XPUT "http://localhost:9200/index-agg" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT "http://localhost:9200/index-agg" -H 'Content-Type: application/json' -d'
 {
   "mappings": {
     "properties": {
@@ -44,7 +44,7 @@ curl -XPUT "http://localhost:9200/index-agg" -H 'Content-Type: application/json'
   }
 }'
 
-curl -XPOST "http://localhost:9200/_bulk" -H 'Content-Type: application/json' -d'
+curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST "http://localhost:9200/_bulk" -H 'Content-Type: application/json' -d'
 {"index":{"_index":"index-agg","_id":"1"}}
 {"in_stock":false,"tag":["perspiciatis","ullam","excepturi","ex"],"name":"Valkyrie","date":"2014-07-28T16:46:01.668683","position":{"lat":-17.9940459163244,"lon":-15.110538312702941},"age":49,"metadata":[{"num":5,"name":"Korrek","value":"3"},{"num":5,"name":"Namora","value":"5"},{"num":26,"name":"Nighthawk","value":"3"}],"price":19.62106010941592,"description":"ducimus nobis harum doloribus voluptatibus libero nisi omnis officiis exercitationem amet odio odit dolor perspiciatis minima quae voluptas dignissimos facere ullam tempore temporibus laboriosam ad doloremque blanditiis numquam placeat accusantium at maxime consectetur esse earum velit officia dolorum corporis nemo consequatur perferendis cupiditate eum illum facilis sunt saepe"}
 {"index":{"_index":"index-agg","_id":"2"}}

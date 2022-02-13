@@ -1,4 +1,4 @@
-REGISTER elasticsearch-hadoop-7.13.2/dist/elasticsearch-hadoop-pig-7.13.2.jar;
+REGISTER elasticsearch-hadoop-8.0.0/dist/elasticsearch-hadoop-pig-8.0.0.jar;
 REGISTER commons-httpclient-3.1.jar;
 
 SET pig.noSplitCombination TRUE;

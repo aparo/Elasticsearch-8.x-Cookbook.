@@ -4,10 +4,13 @@ services:
 
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -25,9 +28,10 @@ services:
 
   kibana:
     container_name: kibana
-    image: docker.elastic.co/kibana/kibana:7.13.2
+    image: docker.elastic.co/kibana/kibana:8.0.0
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
       - xpack.encryptedSavedObjects.encryptionKey=0MI7tu56kXMvbG10MI7tu56kXMvbG10MI7tu56kXMvbG1
     ports:
       - 5601:5601

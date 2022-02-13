@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-client</artifactId>
-            <version>7.13.2</version>
+            <version>8.0.0</version>
         </dependency>
     </dependencies>
 </project>
