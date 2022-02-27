@@ -1,4 +1,4 @@
-
+# Inserting an ingest pipeline
 PUT /_ingest/pipeline/add-user-john
 {
   "description": "Add user john field",
@@ -20,8 +20,7 @@ PUT /my_index/_doc/my_id?pipeline=add-user-john
 
 GET /my_index/_doc/my_id
 
-#Get an ingest pipeline
-
+# Get an ingest pipeline
 GET /_ingest/pipeline/add-user-john
 
 GET /_ingest/pipeline/*
@@ -117,7 +116,7 @@ POST /_ingest/pipeline/_simulate?verbose
   ]
 }
 
-
+# Built-in processors
 POST /_ingest/pipeline/_simulate
 {
   "pipeline": {
@@ -180,7 +179,7 @@ POST /_ingest/pipeline/_simulate
   ]
 }
 
-
+# Grok processor
 POST /_ingest/pipeline/_simulate
 {
   "pipeline": {
@@ -291,7 +290,7 @@ PUT item/_doc/1
 {
   "id": "1",
   "name": "ES Cookbook 8.x",
-  "year": 2021
+  "year": 2022
 }
 
 GET item/_doc/1

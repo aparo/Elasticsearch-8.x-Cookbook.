@@ -51,7 +51,7 @@ curl --user $ES_USER:$ES_PASSWORD --insecure -XPUT "https://127.0.0.1:9200/myboo
 echo
 curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST "https://127.0.0.1:9200/_bulk?refresh" -H 'Content-Type: application/json' -d'
 {"index":{"_index":"mybooks", "_id":"1"}}
-{"uuid":"11111","position":1,"title":"Joe Tester","description":"Joe Testere nice guy","date":"2015-10-22","price":4.3,"quantity":50}
+{"uuid":"11111","position":1,"title":"Joe Tester","description":"Joe Testere nice guy","date":"2021-10-22","price":4.3,"quantity":50}
 {"index":{"_index":"mybooks", "_id":"2"}}
 {"uuid":"22222","position":2,"title":"Bill Baloney","description":"Bill Testere nice guy","date":"2016-06-12","price":5,"quantity":34}
 {"index":{"_index":"mybooks", "_id":"3"}}
@@ -144,7 +144,7 @@ curl  --user $ES_USER:$ES_PASSWORD --insecure -XPUT "https://127.0.0.1:9200/mybo
 echo
 curl  --user $ES_USER:$ES_PASSWORD --insecure -XPOST "https://127.0.0.1:9200/_bulk?refresh" -H 'Content-Type: application/json' -d'
 {"index":{"_index":"mybooks-join", "_id":"1"}}
-{"uuid":"11111","position":1,"title":"Joe Tester","description":"Joe Testere nice guy","date":"2015-10-22","price":4.3,"quantity":50,"join": {"name": "book"}, "versions":[{"color":"yellow", "size":5},{"color":"blue", "size":15}]}
+{"uuid":"11111","position":1,"title":"Joe Tester","description":"Joe Testere nice guy","date":"2021-10-22","price":4.3,"quantity":50,"join": {"name": "book"}, "versions":[{"color":"yellow", "size":5},{"color":"blue", "size":15}]}
 {"index":{"_index":"mybooks-join", "_id":"a1", "routing":"1"}}
 {"name":"Peter","surname":"Doyle","rating":4.5,"join": {"name": "author", "parent":"1"}}
 {"index":{"_index":"mybooks-join", "_id":"a12", "routing":"1"}}

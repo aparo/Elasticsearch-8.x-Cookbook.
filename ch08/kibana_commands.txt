@@ -250,46 +250,40 @@ DELETE reindex-scripting
 PUT /reindex-scripting
 {
   "mappings": {
-    "_doc": {
-      "properties": {
-        "name": {
-          "term_vector": "with_positions_offsets",
-          "boost": 1,
-          "store": true,
-          "type": "text"
-        },
-        "title": {
-          "term_vector": "with_positions_offsets",
-          "boost": 1,
-          "store": true,
-          "type": "text"
-        },
-        "parsedtext": {
-          "term_vector": "with_positions_offsets",
-          "boost": 1,
-          "store": true,
-          "type": "text"
-        },
-        "tag": {
-          "type": "keyword",
-          "store": true
-        },
-        "processed": {
-          "type": "boolean"
-        },
-        "date": {
-          "type": "date",
-          "store": true
-        },
-        "position": {
-          "type": "geo_point",
-          "store": true
-        },
-        "uuid": {
-          "boost": 1,
-          "store": true,
-          "type": "keyword"
-        }
+    "properties": {
+      "name": {
+        "term_vector": "with_positions_offsets",
+        "store": true,
+        "type": "text"
+      },
+      "title": {
+        "term_vector": "with_positions_offsets",
+        "store": true,
+        "type": "text"
+      },
+      "parsedtext": {
+        "term_vector": "with_positions_offsets",
+        "store": true,
+        "type": "text"
+      },
+      "tag": {
+        "type": "keyword",
+        "store": true
+      },
+      "processed": {
+        "type": "boolean"
+      },
+      "date": {
+        "type": "date",
+        "store": true
+      },
+      "position": {
+        "type": "geo_point",
+        "store": true
+      },
+      "uuid": {
+        "store": true,
+        "type": "keyword"
       }
     }
   }
@@ -315,3 +309,46 @@ if(!ctx._source.containsKey("processed")){
 
 GET /reindex-scripting/_doc/10  
 
+
+# using script in pipelines
+
+POST /_ingest/pipeline/_simulate
+{
+  "pipeline": {
+    "processors": [
+      {
+        "set": {
+          "if": "ctx.cost!=null",
+          "field": "vat",
+          "value": 20
+        }
+      },
+      {
+        "script": {
+          "lang": "painless",
+          "if": "ctx.vat!=null && ctx.cost!=null ",
+          "source": "ctx.total = ctx.cost*(ctx.vat - params.discount)",
+          "params": {
+            "discount": 10
+          }
+        }
+      }
+    ]
+  },
+  "docs": [
+    {
+      "_index": "index",
+      "_id": "id",
+      "_source": {
+        "cost": 5
+      }
+    },
+    {
+      "_index": "index",
+      "_id": "id",
+      "_source": {
+        "foo": "no touch"
+      }
+    }
+  ]
+}

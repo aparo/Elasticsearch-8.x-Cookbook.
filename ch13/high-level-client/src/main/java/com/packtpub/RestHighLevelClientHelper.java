@@ -10,7 +10,7 @@ public class RestHighLevelClientHelper {
     public static RestHighLevelClient createHighLevelClient() {
 
         return new RestHighLevelClient(
-                RestClient.builder(new HttpHost("localhost", 9200, "http"), new HttpHost("localhost", 9201, "http")));
+                RestClient.builder(new HttpHost("localhost", 9200, "https"), new HttpHost("localhost", 9201, "https")));
 
     }
 

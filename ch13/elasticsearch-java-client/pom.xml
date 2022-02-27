@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.packtpub</groupId>
-    <artifactId>high-level-client</artifactId>
+    <artifactId>elasticsearch-client</artifactId>
     <packaging>jar</packaging>
     <version>8.0.0</version>
     <name>high-level-client</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <maven.compiler.source>1.17</maven.compiler.source>
-        <maven.compiler.target>1.17</maven.compiler.target>
+        <maven.compiler.source>1.14</maven.compiler.source>
+        <maven.compiler.target>1.14</maven.compiler.target>
     </properties>
 
     <repositories>

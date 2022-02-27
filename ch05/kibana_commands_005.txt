@@ -36,13 +36,14 @@ POST /mybooks/_search
   }
 }
 
+PUT /my-index
+
 GET /my-index/_search
 {
   "query": {
     "terms": {
       "can_see_groups": {
         "index": "my-index",
-        "type": "user",
         "id": "1bw71LaxSzSp_zV6NB_YGg",
         "path": "groups"
       }
@@ -353,18 +354,6 @@ POST /mybooks/_search
 
 
 
-#common text
-POST /mybooks/_search
-{
-  "query": {
-    "common": {
-      "description": {
-        "query": "nice guy",
-        "cutoff_frequency": 0.001
-      }
-    }
-  }
-}
 
 #ids
 
@@ -372,7 +361,6 @@ POST /mybooks/_search
 {
   "query": {
     "ids": {
-      "type": "test-type",
       "values": [
         "1",
         "2",
@@ -382,23 +370,32 @@ POST /mybooks/_search
   }
 }
 
+# exists query
+
+POST /mybooks/_search
+{
+  "query": {
+    "exists": {
+      "field": "description"
+    }
+  }
+}
 
 
+# pinned query
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+POST /mybooks/_search
+{
+  "query": {
+    "pinned": {
+      "ids": ["1","2","3"],
+      "organic": {
+        "term": {
+          "description": "bill"
+        }
+      }
+    }
+  }
+}
 
 

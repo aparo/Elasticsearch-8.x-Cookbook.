@@ -50,7 +50,7 @@ PUT /_snapshot/my_repository
 {
   "type": "fs",
   "settings": {
-    "location": "/ mnt/nfs/my_repository",
+    "location": "/mnt/nfs/my_repository",
     "compress": true
   }
 }
