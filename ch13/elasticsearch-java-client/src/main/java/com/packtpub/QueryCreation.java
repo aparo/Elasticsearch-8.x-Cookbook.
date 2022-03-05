@@ -80,17 +80,22 @@ public class QueryCreation {
             client.bulk(c -> c.operations(bulkOperations));
 
             client.indices().refresh(r -> r.index(index));
-            SearchRequest searchRequest = new SearchRequest.Builder().index(index)
-                    .query(q ->
-                            q.bool(b -> b
-                                    .must(must -> must.range(r -> r.field("number1").gte(JsonData.of(500)))).
-                                    filter(f -> f.term(t -> t.field("number2").value(FieldValue.of(1))))))
-                    .build();
+SearchRequest searchRequest = new SearchRequest.Builder()
+        .index(index)
+        .query(q ->
+                q.bool(b -> b
+                        .must(must ->
+                                must.range(r -> r.field("number1").gte(JsonData.of(500)))
+                        ).
+                        filter(f -> f.term(t -> t.field("number2").value(FieldValue.of(1))))
+                )
+        )
+        .build();
 
 
-            SearchResponse<Record> response = client.search(searchRequest, Record.class);
-            assert response.hits().total() != null;
-            System.out.println("Matched records of elements: " + response.hits().total().value());
+SearchResponse<Record> response = client.search(searchRequest, Record.class);
+assert response.hits().total() != null;
+System.out.println("Matched records of elements: " + response.hits().total().value());
 
             SearchResponse<Record> response2 = client.search(new SearchRequest.Builder().index(index).build(), Record.class);
             assert response2.hits().total() != null;

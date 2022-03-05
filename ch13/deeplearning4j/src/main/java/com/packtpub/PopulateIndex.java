@@ -1,44 +1,38 @@
 package com.packtpub;
 
 import au.com.bytecode.opencsv.CSVReader;
-import org.apache.http.HttpHost;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestClientBuilder;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.GetIndexRequest;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import org.slf4j.Logger;
 
-import java.io.*;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class PopulateIndex {
     private static final Logger logger = getLogger(PopulateIndex.class);
 
-    public boolean checkIndexExists(RestHighLevelClient client, String name) throws IOException {
-        return client.indices().exists(new GetIndexRequest(name), RequestOptions.DEFAULT);
+    public boolean checkIndexExists(ElasticsearchClient client, String name) throws IOException {
+        return client.indices().exists(c -> c.index(name)).value();
     }
 
-    public void createIndex(RestHighLevelClient client, String name) throws IOException {
-        client.indices().create(new CreateIndexRequest(name), RequestOptions.DEFAULT);
+    public void createIndex(ElasticsearchClient client, String name) throws IOException {
+        client.indices().create(c -> c.index(name));
     }
 
-    public void deleteIndex(RestHighLevelClient client, String name) throws IOException {
-        client.indices().delete(new DeleteIndexRequest(name), RequestOptions.DEFAULT);
+    public void deleteIndex(ElasticsearchClient client, String name) throws IOException {
+        client.indices().delete(c -> c.index(name));
     }
 
-    public void populateIndex() throws IOException {
-        HttpHost httpHost = new HttpHost("localhost", 9200, "http");
-        RestClientBuilder restClient = RestClient.builder(httpHost);
-        RestHighLevelClient client = new RestHighLevelClient(restClient);
+    public void populateIndex() throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        ClientHelper nativeClient = new ClientHelper();
+        ElasticsearchClient client = nativeClient.getClient();
 
         String indexName = "iris";
         if (!checkIndexExists(client, indexName))
@@ -46,7 +40,7 @@ public class PopulateIndex {
 
         InputStreamReader bReader = new InputStreamReader(getClass().getResourceAsStream("/" + "iris.txt"));
 
-        BulkRequest bulker = new BulkRequest();
+        List<BulkOperation> bulkOperations = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(bReader, ',', '\"')) {
 
@@ -57,17 +51,11 @@ public class PopulateIndex {
             int i = 0;
             for (i = 0; i < rows.size(); i++) {
                 String[] line = rows.get(i);
-                Map<String, Object> source = new HashMap<>(5);
-                source.put("f1", Float.valueOf(line[0]));
-                source.put("f2", Float.valueOf(line[1]));
-                source.put("f3", Float.valueOf(line[2]));
-                source.put("f4", Float.valueOf(line[3]));
-                source.put("label", Integer.valueOf(line[4]));
-
-                bulker.add(new IndexRequest(indexName).id(Integer.toString(i)).source(source));
+                final Iris obj = new Iris(Integer.valueOf(line[4]), Float.valueOf(line[0]), Float.valueOf(line[1]), Float.valueOf(line[2]), Float.valueOf(line[3]));
+                bulkOperations.add(BulkOperation.of(o -> o.index(idx -> idx.index(indexName).document(obj))));
 
             }
-            client.bulk(bulker, RequestOptions.DEFAULT);
+            client.bulk(c -> c.operations(bulkOperations));
 
         } catch (IOException e) {
             logger.warn("Error parsing CSV file", e);
@@ -76,11 +64,11 @@ public class PopulateIndex {
         }
 
         // we need to close the client to free resources
-        client.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         PopulateIndex pop = new PopulateIndex();
         pop.populateIndex();
+        System.out.println("Data saved");
     }
 }
