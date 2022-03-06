@@ -2,9 +2,9 @@ organization := "com.packtpub"
 
 name := """deep-learning-scala"""
 
-version := "0.0.4"
+version := "0.8.0"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.8"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 val PackagingTypeWorkaround: Unit = {
@@ -19,7 +19,7 @@ lazy val nd4jVersion="1.0.0-beta3"
 lazy val dl4jVersion="1.0.0-beta3"
 
 libraryDependencies ++= {
-  val elastic4sV = "8.0.0"
+  val elastic4sV = "7.17.0"
   val scalaTestV = "3.0.8"
   val Log4jVersion = "2.12.1"
   Seq(

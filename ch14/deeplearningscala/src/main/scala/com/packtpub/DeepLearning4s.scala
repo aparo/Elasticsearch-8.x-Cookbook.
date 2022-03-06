@@ -18,12 +18,9 @@ import org.nd4j.linalg.factory.Nd4j
 import org.nd4j.linalg.learning.config.Sgd
 import org.nd4j.linalg.lossfunctions.LossFunctions
 
-object DeepLearning4s extends App with LazyLogging {
+object DeepLearning4s extends App with LazyLogging with ElasticSearchClientTrait{
 
 
-  lazy val client: ElasticClient = {
-    ElasticClient(JavaClient(ElasticProperties("https://127.0.0.1:9200")))
-  }
   import com.sksamuel.elastic4s.ElasticDsl._
 
   lazy val indexName = "iris"
