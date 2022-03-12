@@ -8,15 +8,18 @@ scalaVersion := "2.13.5"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
+val scalaTestVersion = "3.2.8"
+val alpakkaVersion = "3.0.4"
+val akkaVersion = "2.6.14"
+
 libraryDependencies ++= {
-  val scalaTestV = "3.2.8"
   Seq(
     "com.github.pathikrit" %% "better-files" % "3.9.1",
-    "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "2.0.2",
-    "com.lightbend.akka" %% "akka-stream-alpakka-elasticsearch" % "2.0.2",
-    "org.mongodb.scala" %% "mongo-scala-bson" % "2.9.0",
-    "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % "2.0.2",
-    "org.scalatest" %% "scalatest" % scalaTestV % "test"
+    "com.lightbend.akka" %% "akka-stream-alpakka-csv" % alpakkaVersion,
+    "com.lightbend.akka" %% "akka-stream-alpakka-elasticsearch" % alpakkaVersion,
+    "com.lightbend.akka" %% "akka-stream-alpakka-mongodb" % alpakkaVersion,
+     "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+    "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
   )
 }
 

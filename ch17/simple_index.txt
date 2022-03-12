@@ -1,10 +1,27 @@
+import org.apache.spark.SparkContext    
+import org.apache.spark.SparkContext._
+
 val conf = sc.getConf
 conf.setAppName("ESImport")
 conf.set("es.index.auto.create", "true")
+.set( "es.nodes.wan.only" , "false" )
+.set("es.net.http.auth.user", sys.env.getOrElse("ES_USER","elastic"))
+.set("es.net.http.auth.password", sys.env.getOrElse("ES_PASSWORD","password"))
+.set("es.net.ssl", "true")
+.set("es.net.ssl.cert.allow.self.signed", "true")
+.set("es.net.ssl.keystore.location", "file:///home/alberto/Projects/es/Elasticsearch-8.x-Cookbook./elasticsearch/config/certs/http_ca.crt")
+val sc = new SparkContext(conf) 
+
+
+keytool -importkeystore \
+  -srckeystore ./config/elastic-certificates.p12 -srcstorepass "" -srcalias ca \
+  -destkeystore ./ca.p12 
+
 
 import org.elasticsearch.spark._
 
 val numbers = Map("one" -> 1, "two" -> 2, "three" -> 3)
 val airports = Map("arrival" -> "Otopeni", "SFO" -> "San Fran")
 
-sc.makeRDD(Seq(numbers, airports)).saveToEs("spark/docs")
+sc.makeRDD(Seq(numbers, airports)).saveToEs("spark_docs")
+

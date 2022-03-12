@@ -1,10 +1,15 @@
-REGISTER elasticsearch-hadoop-8.0.0/dist/elasticsearch-hadoop-pig-8.0.0.jar;
+REGISTER elasticsearch-hadoop-8.1.0/dist/elasticsearch-hadoop-pig-8.1.0.jar;
 REGISTER commons-httpclient-3.1.jar;
 
 SET pig.noSplitCombination TRUE;
 
 
-DEFINE EsStorage org.elasticsearch.hadoop.pig.EsStorage();
+DEFINE EsStorage org.elasticsearch.hadoop.pig.EsStorage(
+    'es.index.auto.create=true',
+    'es.nodes.wan.only=true',
+    'es.net.http.auth.user=elastic',
+    'es.net.http.auth.pass=BfCIhOWzJqoBCNuvjY*A'
+);
 
 
 -- launch the Map/Reduce job with 5 reducers

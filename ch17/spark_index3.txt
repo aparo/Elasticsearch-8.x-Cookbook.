@@ -9,4 +9,4 @@ val personIds=persons.map(p => p.id -> p)
 val rdd=sc.makeRDD(personIds)
 
 
-rdd.saveToEsWithMeta("spark3/person_id")
+rdd.saveToEsWithMeta("spark3")
