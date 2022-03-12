@@ -1,31 +1,43 @@
+import org.elasticsearch.gradle.testclusters.StandaloneRestIntegTestTask
+import org.gradle.api.tasks.Input;
+import org.gradle.process.CommandLineArgumentProvider;
+
+import java.nio.file.Files
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 buildscript {
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    jcenter()
+  dependencies {
+    classpath "org.elasticsearch.gradle:build-tools:${elasticsearchVersion}"
   }
 
-  dependencies {
-    classpath "org.elasticsearch.gradle:build-tools:8.0.0"
+  repositories {
+    // mavenLocal()
+    mavenCentral()
+    // jcenter()
   }
+
+}
+
+plugins {
+  id "com.github.humblerookie.gradle" version "0.4.4"
+  id "com.github.ben-manes.versions" version '0.33.0'
 }
 
 repositories {
-  mavenLocal()
+  mavenCentral()
 }
 
 group = 'org.elasticsearch.plugin'
-version = '0.0.1-SNAPSHOT'
+version = "${elasticsearchVersion}"
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'elasticsearch.esplugin'
 apply plugin: 'elasticsearch.yaml-rest-test'
 
-// license of this project
-licenseFile = rootProject.file('LICENSE.txt')
-// copyright notices
-noticeFile = rootProject.file('NOTICE.txt')
 
 esplugin {
   name 'rest-plugin'
@@ -41,17 +53,75 @@ esplugin {
 // Note, the two dependencies are not really needed as the buildscript dependency gets them in already
 // they are just here as an example
 dependencies {
-  compile 'org.elasticsearch:elasticsearch:8.0.0'
+  implementation "org.elasticsearch:elasticsearch:${elasticsearchVersion}" 
 
-  // the yaml tests require a log4j2 dependency, otherwise a dependency is thrown on startup
-  yamlRestTestImplementation 'org.apache.logging.log4j:log4j-core:2.11.1'
-  testCompile 'org.elasticsearch.test:framework:8.0.0'
+  yamlRestTestImplementation "org.elasticsearch.test:framework:${elasticsearchVersion}"
 }
 
-// disable validation of pom creation, only needed for sonatype uploads
-validateNebulaPom.enabled = false
+// disable Javadoc tasks
+tasks.withType(Javadoc).all { enabled = false }
 
 // ignore javadoc linting errors for now
 tasks.withType(Javadoc) {
   options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+// setup yaml rest tests
+testClusters {
+  yamlRestTest
+}
+
+sourceSets {
+  yamlRestTest
+}
+
+configurations {
+  yamlRestTestImplementation.extendsFrom testImplementation
+  yamlRestTestRuntimeOnly.extendsFrom testRuntimeOnly
+  restTestSpecs
+}
+
+TaskProvider<Zip> bundle = project.getTasks().withType(Zip.class).named("bundlePlugin");
+
+// Register rest resources with source set
+sourceSets.yamlRestTest.getOutput().dir("$buildDir/restResources/restspec");
+
+// this is a bit of a hack to make sure we run the test tests when releasing...
+check.dependsOn 'yamlRestTest'
+
+dependencies {
+  yamlRestTestImplementation "org.elasticsearch.test:framework:$elasticsearchVersion"
+  restTestSpecs "org.elasticsearch:rest-api-spec:$elasticsearchVersion"
+}
+
+// This will be available in 7.15 in build tools and not manually declared. 
+public class SystemPropertyCommandLineArgumentProvider implements CommandLineArgumentProvider {
+    private final Map<String, Object> systemProperties = new LinkedHashMap<>();
+
+    public void systemProperty(String key, Supplier<String> value) {
+        systemProperties.put(key, value);
+    }
+
+    public void systemProperty(String key, Object value) {
+        systemProperties.put(key, value);
+    }
+
+    @Override
+    public Iterable<String> asArguments() {
+        return systemProperties.entrySet()
+            .stream()
+            .map(
+                entry -> "-D"
+                    + entry.getKey()
+                    + "="
+                    + (entry.getValue() instanceof Supplier ? ((Supplier) entry.getValue()).get() : entry.getValue())
+            )
+            .collect(Collectors.toList());
+    }
+
+    // Track system property keys as an input so our build cache key will change if we add properties but values are still ignored
+    @Input
+    public Iterable<String> getPropertyNames() {
+        return systemProperties.keySet();
+    }
 }

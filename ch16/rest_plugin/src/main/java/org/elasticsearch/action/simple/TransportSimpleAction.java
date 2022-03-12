@@ -17,6 +17,7 @@
 
 package org.elasticsearch.action.simple;
 
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.support.ActionFilters;
 import org.elasticsearch.action.support.DefaultShardOperationFailedException;
 import org.elasticsearch.action.support.broadcast.node.TransportBroadcastByNodeAction;
@@ -51,8 +52,8 @@ public class TransportSimpleAction
 
     @Inject
     public TransportSimpleAction(ClusterService clusterService,
-                                 TransportService transportService, IndicesService indicesService,
-                                 ActionFilters actionFilters, IndexNameExpressionResolver indexNameExpressionResolver) {
+            TransportService transportService, IndicesService indicesService,
+            ActionFilters actionFilters, IndexNameExpressionResolver indexNameExpressionResolver) {
         super(SimpleAction.NAME, clusterService, transportService, actionFilters,
                 indexNameExpressionResolver, SimpleRequest::new, ThreadPool.Names.SEARCH);
         this.indicesService = indicesService;
@@ -60,9 +61,9 @@ public class TransportSimpleAction
 
     @Override
     protected SimpleResponse newResponse(SimpleRequest request, int totalShards, int successfulShards, int failedShards,
-                                         List<ShardSimpleResponse> shardSimpleResponses,
-                                         List<DefaultShardOperationFailedException> shardFailures,
-                                         ClusterState clusterState) {
+            List<ShardSimpleResponse> shardSimpleResponses,
+            List<DefaultShardOperationFailedException> shardFailures,
+            ClusterState clusterState) {
         Set<String> simple = new HashSet<String>();
         for (ShardSimpleResponse shardSimpleResponse : shardSimpleResponses) {
             simple.addAll(shardSimpleResponse.getTermList());
@@ -72,13 +73,14 @@ public class TransportSimpleAction
     }
 
     @Override
-    protected ShardSimpleResponse shardOperation(SimpleRequest request, ShardRouting shardRouting, Task task) throws IOException {
+    protected void shardOperation(SimpleRequest request, ShardRouting shardRouting, Task task,
+            ActionListener<ShardSimpleResponse> listener) {
         IndexService indexService = indicesService.indexServiceSafe(shardRouting.shardId().getIndex());
         IndexShard indexShard = indexService.getShard(shardRouting.shardId().id());
         indexShard.store().directory();
         Set<String> set = new HashSet<String>();
         set.add(request.getField() + "_" + shardRouting.shardId());
-        return new ShardSimpleResponse(shardRouting, set);
+        listener.onResponse(new ShardSimpleResponse(shardRouting, set));
     }
 
     @Override
@@ -102,7 +104,9 @@ public class TransportSimpleAction
     }
 
     @Override
-    protected ClusterBlockException checkRequestBlock(ClusterState state, SimpleRequest request, String[] concreteIndices) {
+    protected ClusterBlockException checkRequestBlock(ClusterState state, SimpleRequest request,
+            String[] concreteIndices) {
         return state.blocks().indicesBlockedException(ClusterBlockLevel.METADATA_READ, concreteIndices);
     }
+
 }
