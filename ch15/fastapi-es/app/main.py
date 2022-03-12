@@ -1,14 +1,24 @@
 #!/usr/bin/env python
+import urllib3
+urllib3.disable_warnings()
 from dotenv import load_dotenv
 load_dotenv()
 import os
 import uvicorn
-from fastapi import FastAPI, Request, Depends, Response
-from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 import logging
-
+import ssl 
 from elasticsearch import AsyncElasticsearch
-es = AsyncElasticsearch()
+es = AsyncElasticsearch(
+    hosts=os.environ.get("ES_HOST", "https://localhost:9200"),
+    basic_auth=(
+        os.environ.get("ES_USER", "elastic"),
+        os.environ.get("ES_PASSWORD", "password"),
+    ),
+    ssl_version=ssl.TLSVersion.TLSv1_2,
+    verify_certs=False,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

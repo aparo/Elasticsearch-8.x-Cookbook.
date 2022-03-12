@@ -4,7 +4,7 @@ from datetime import datetime
 
 def create_and_add_mapping(connection, index_name):
     try:
-        connection.indices.create(index_name)
+        connection.indices.create(index=index_name)
     except:
         # we skip exception if index already exists
         pass
@@ -48,4 +48,4 @@ def populate(connection, index_name):
     connection.index(index=index_name, id=3, body={"name": "Bill Clinton", "parsedtext": """Bill is not
     nice guy""", "uuid": "33333", "position": 3, "date": datetime(2018, 12, 8), "join_field": {"name": "book"}})
 
-    connection.indices.refresh(index_name)
+    connection.indices.refresh(index=index_name)

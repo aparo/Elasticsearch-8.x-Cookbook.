@@ -1,10 +1,24 @@
+import urllib3
+urllib3.disable_warnings()
+
 # importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
 import elasticsearch
-es = elasticsearch.Elasticsearch()
+import os
+import ssl
+
+es = elasticsearch.Elasticsearch(
+    hosts=os.environ.get("ES_HOST", "https://localhost:9200"),
+    basic_auth=(
+        os.environ.get("ES_USER", "elastic"),
+        os.environ.get("ES_PASSWORD", "password"),
+    ),
+    ssl_version=ssl.TLSVersion.TLSv1_2,
+    verify_certs=False,
+)
 index_name = "iris"
 result = es.search(index="iris", size=100)
 

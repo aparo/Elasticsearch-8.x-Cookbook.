@@ -1,9 +1,22 @@
+import urllib3
+urllib3.disable_warnings()
+
 from elasticsearch.helpers import bulk
 from utils import create_and_add_mapping
-import elasticsearch
 from datetime import datetime
+import elasticsearch
+import os
+import ssl
 
-es = elasticsearch.Elasticsearch()
+es = elasticsearch.Elasticsearch(
+    hosts=os.environ.get("ES_HOST", "https://localhost:9200"),
+    basic_auth=(
+        os.environ.get("ES_USER", "elastic"),
+        os.environ.get("ES_PASSWORD", "password"),
+    ),
+    ssl_version=ssl.TLSVersion.TLSv1_2,
+    verify_certs=False,
+)
 
 index_name = "my_index"
 
